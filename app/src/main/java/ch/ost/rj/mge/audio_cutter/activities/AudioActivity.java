@@ -10,11 +10,11 @@ import ch.ost.rj.mge.audio_cutter.R;
 
 public class AudioActivity extends AppCompatActivity {
 
-    private static final String AUDIO_KEY = "audio";
+    private static final String AUDIO_ID_KEY = "audio_id";
 
-    public static Intent createIntent(Context context, String audio) {
+    public static Intent createIntent(Context context, int audioId) {
         Intent intent = new Intent(context, AudioActivity.class);
-        intent.putExtra(AUDIO_KEY, audio);
+        intent.putExtra(AUDIO_ID_KEY, audioId);
         return intent;
     }
 

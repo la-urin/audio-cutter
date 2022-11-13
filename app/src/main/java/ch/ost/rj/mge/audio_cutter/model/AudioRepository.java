@@ -25,8 +25,8 @@ public class AudioRepository extends Observable {
         database = Room.databaseBuilder(context, AudioDatabase.class, "audio-cutter.db").allowMainThreadQueries().build();
 
         if (getAudios().size() == 0) {
-            addAudio("Hallo");
-            addAudio("Schwuuubel");
+            addAudio("Hallo", "asdf");
+            addAudio("Schwuuubel", "jklö");
         }
     }
 
@@ -40,9 +40,10 @@ public class AudioRepository extends Observable {
         notifyObservers(audio);
     }
 
-    public Audio addAudio(String name) {
+    public Audio addAudio(String name, String path) {
         Audio audio = new Audio();
         audio.name = name;
+        audio.path = path;
 
         addAudio(audio);
 
