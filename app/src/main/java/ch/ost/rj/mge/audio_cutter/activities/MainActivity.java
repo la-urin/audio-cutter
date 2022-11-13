@@ -29,16 +29,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        AudioAdapter adapter = new AudioAdapter(AudioRepository.getInstance());
+        AudioAdapter adapter = new AudioAdapter(AudioRepository.getInstance(), this::startAudioActivity);
 
         RecyclerView recyclerView = findViewById(R.id.audio_list);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
         ExtendedFloatingActionButton fab = findViewById(R.id.fab_add);
-        fab.setOnClickListener(v -> {
-            addNewAudio();
-        });
+        fab.setOnClickListener(v -> addNewAudio());
 
         selectAudioResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -48,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
                         if (data != null) onAudioSelected(data);
                     }
                 });
+    }
+
+    private void startAudioActivity(Audio audio) {
+        Intent intent = AudioActivity.createIntent(this, audio);
+        startActivity(intent);
     }
 
     private void addNewAudio() {
@@ -60,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
     private void onAudioSelected(Intent data) {
         File file = new File(data.getDataString());
         Audio audio = AudioRepository.getInstance().addAudio(file.getName(), file.getAbsolutePath());
-        Intent intent = AudioActivity.createIntent(this, audio.id);
-        startActivity(intent);
+        startAudioActivity(audio);
     }
 }

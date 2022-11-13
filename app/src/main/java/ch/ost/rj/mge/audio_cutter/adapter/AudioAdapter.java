@@ -19,10 +19,17 @@ import ch.ost.rj.mge.audio_cutter.model.Audio;
 import ch.ost.rj.mge.audio_cutter.model.AudioRepository;
 
 public class AudioAdapter extends RecyclerView.Adapter<AudioViewHolder> implements Observer {
-    private final List<Audio> audios;
 
-    public AudioAdapter(AudioRepository repository) {
+    public interface OnItemClickListener {
+        void onItemClick(Audio audio);
+    }
+
+    private final List<Audio> audios;
+    private final OnItemClickListener listener;
+
+    public AudioAdapter(AudioRepository repository, OnItemClickListener listener) {
         this.audios = new ArrayList(repository.getAudios());
+        this.listener = listener;
         repository.addObserver(this);
     }
 
@@ -47,6 +54,7 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioViewHolder> implemen
         Audio audio = this.audios.get(position);
         holder.nameView.setText(audio.name);
         holder.pathView.setText(audio.path);
+        holder.bind(audio, listener);
     }
 
     @Override
