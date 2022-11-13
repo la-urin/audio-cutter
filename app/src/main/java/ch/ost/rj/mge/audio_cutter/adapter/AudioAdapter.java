@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import ch.ost.rj.mge.audio_cutter.R;
 import ch.ost.rj.mge.audio_cutter.model.Audio;
 import ch.ost.rj.mge.audio_cutter.model.AudioRepository;
 
@@ -32,18 +33,20 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioViewHolder> implemen
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View view = inflater.inflate(
-                android.R.layout.simple_list_item_1,
+                R.layout.card_view_template,
                 parent,
                 false);
 
-        TextView nameView = view.findViewById(android.R.id.text1);
-        return new AudioViewHolder(view, nameView);
+        TextView nameView = view.findViewById(R.id.card_view_title);
+        TextView pathView = view.findViewById(R.id.card_view_info);
+        return new AudioViewHolder(view, nameView, pathView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull AudioViewHolder holder, int position) {
         Audio audio = this.audios.get(position);
         holder.nameView.setText(audio.name);
+        holder.pathView.setText(audio.path);
     }
 
     @Override

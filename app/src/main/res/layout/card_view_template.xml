@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view_template"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/distance_between_controls_05x"
+    card_view:cardCornerRadius="@dimen/card_corner_radius"
+    card_view:cardElevation="@dimen/card_elevation">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/distance_between_controls_2x">
+
+        <TextView
+            android:id="@+id/card_view_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="titel"
+            android:textSize="@dimen/card_title_size"
+            android:textStyle="bold"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/card_view_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="info"
+            card_view:layout_constraintEnd_toEndOf="@+id/card_view_title"
+            card_view:layout_constraintStart_toStartOf="@+id/card_view_title"
+            card_view:layout_constraintTop_toBottomOf="@+id/card_view_title" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
