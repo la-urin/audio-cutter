@@ -3,4 +3,5 @@
     <string name="add_audio">Add Audio</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="play_audio_button">Play Audio Button</string>
 </resources>
