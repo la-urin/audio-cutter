@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    tools:context=".fragments.EmptyListFragment">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:contentDescription="@string/empty_list_background_image"
+        android:rotation="15"
+        android:src="@drawable/ic_music"
+        android:theme="@style/IconTheme"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/arrow"
+        android:layout_width="94dp"
+        android:layout_height="63dp"
+        android:contentDescription="@string/empty_list_arrow"
+        android:rotationY="180"
+        android:src="@drawable/ic_arrow"
+        app:layout_constraintBottom_toBottomOf="@+id/invisible_fab"
+        app:layout_constraintEnd_toStartOf="@+id/invisible_fab" />
+
+    <TextView
+        android:id="@+id/empty_list_info1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:fontFamily="@font/amatica_sc"
+        android:rotation="-10"
+        android:text="@string/empty_list_info1"
+        android:textSize="@dimen/card_title_size"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/arrow"
+        app:layout_constraintEnd_toEndOf="@+id/arrow"
+        app:layout_constraintHorizontal_bias="0.524"
+        app:layout_constraintStart_toStartOf="@+id/arrow" />
+
+    <TextView
+        android:id="@+id/empty_list_info2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/amatica_sc"
+        android:rotation="10"
+        android:text="@string/empyt_list_info2"
+        android:textSize="@dimen/card_title_size"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.2" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/invisible_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/distance_between_controls_2x"
+        android:text="@string/add_audio"
+        android:visibility="invisible"
+        app:icon="@android:drawable/ic_input_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

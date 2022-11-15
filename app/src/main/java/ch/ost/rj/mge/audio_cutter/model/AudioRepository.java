@@ -23,11 +23,6 @@ public class AudioRepository extends Observable {
 
     private AudioRepository(Context context) {
         database = Room.databaseBuilder(context, AudioDatabase.class, "audio-cutter.db").allowMainThreadQueries().build();
-
-        if (getAudios().size() == 0) {
-            addAudio("Hallo", "asdf");
-            addAudio("Schwuuubel", "jklö");
-        }
     }
 
     public List<Audio> getAudios() {
@@ -48,5 +43,9 @@ public class AudioRepository extends Observable {
         addAudio(audio);
 
         return audio;
+    }
+
+    public boolean isEmpty() {
+        return database.audioDao().getCount() == 0;
     }
 }

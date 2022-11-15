@@ -15,4 +15,7 @@ public interface AudioDao {
 
     @Insert
     void insert(Audio audio);
+
+    @Query("SELECT count(*) FROM audio")
+    int getCount();
 }
