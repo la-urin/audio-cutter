@@ -19,19 +19,18 @@ import ch.ost.rj.mge.audio_cutter.model.AudioRepository;
 public class AudioListFragment extends Fragment {
 
     public static AudioListFragment create() {
-        System.out.println("audio list fragment create");
         return new AudioListFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        System.out.println("audio list fragment onCreateView");
-
         View view = inflater.inflate(R.layout.fragment_audio_list, container, false);
 
         if (view instanceof RecyclerView) {
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
-            AudioAdapter adapter = new AudioAdapter(AudioRepository.getInstance(), this::startAudioActivity);
+            AudioAdapter adapter = new AudioAdapter(AudioRepository.getInstance(),
+                    this::startAudioActivity,
+                    this::playAudio);
 
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(layoutManager);
@@ -44,5 +43,9 @@ public class AudioListFragment extends Fragment {
     private void startAudioActivity(Audio audio) {
         Intent intent = AudioActivity.createIntent(getActivity(), audio);
         startActivity(intent);
+    }
+
+    private void playAudio(Audio audio) {
+        System.out.println("play audio: " + audio.path);
     }
 }

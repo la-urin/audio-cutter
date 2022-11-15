@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,16 +21,19 @@ import ch.ost.rj.mge.audio_cutter.model.AudioRepository;
 
 public class AudioAdapter extends RecyclerView.Adapter<AudioViewHolder> implements Observer {
 
-    public interface OnItemClickListener {
-        void onItemClick(Audio audio);
+    public interface OnAudioClickListener {
+        void onClick(Audio audio);
     }
 
     private final List<Audio> audios;
-    private final OnItemClickListener listener;
+    private final OnAudioClickListener onClickListener;
+    private final OnAudioClickListener onPlayListener;
 
-    public AudioAdapter(AudioRepository repository, OnItemClickListener listener) {
-        this.audios = new ArrayList(repository.getAudios());
-        this.listener = listener;
+    public AudioAdapter(AudioRepository repository, OnAudioClickListener onClickListener, OnAudioClickListener onPlayListener) {
+        this.audios = new ArrayList<>(repository.getAudios());
+        this.onClickListener = onClickListener;
+        this.onPlayListener = onPlayListener;
+
         repository.addObserver(this);
     }
 
@@ -46,7 +50,8 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioViewHolder> implemen
 
         TextView nameView = view.findViewById(R.id.card_view_title);
         TextView pathView = view.findViewById(R.id.card_view_info);
-        return new AudioViewHolder(view, nameView, pathView);
+        ImageButton playButton = view.findViewById(R.id.card_view_play);
+        return new AudioViewHolder(view, nameView, pathView, playButton);
     }
 
     @Override
@@ -54,7 +59,9 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioViewHolder> implemen
         Audio audio = this.audios.get(position);
         holder.nameView.setText(audio.name);
         holder.pathView.setText(audio.path);
-        holder.bind(audio, listener);
+
+        holder.itemView.setOnClickListener(v -> this.onClickListener.onClick(audio));
+        holder.playButton.setOnClickListener(v -> this.onPlayListener.onClick(audio));
     }
 
     @Override
