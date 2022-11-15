@@ -4,4 +4,6 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="play_audio_button">Play Audio Button</string>
+    <string name="setting_audio_button">Set Audio As Buttion</string>
+    <string name="share_audio_button">Share Audio Button</string>
 </resources>
