@@ -25,6 +25,7 @@
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent" />
 
+<!--        todo: remove or change. idk -->
         <TextView
             android:id="@+id/card_view_info"
             android:layout_width="match_parent"
@@ -44,8 +45,9 @@
             android:scaleType="fitXY"
             android:src="@drawable/ic_action_play"
             android:theme="@style/IconTheme"
+            card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toBottomOf="@+id/card_view_info" />
+            card_view:layout_constraintTop_toBottomOf="@+id/card_view_title" />
 
         <ImageButton
             android:id="@+id/card_view_setting"
@@ -53,6 +55,7 @@
             android:layout_height="32dp"
             android:contentDescription="@string/setting_audio_button"
             android:padding="0dp"
+            android:layout_marginRight="@dimen/distance_between_controls"
             android:scaleType="fitXY"
             android:src="@drawable/ic_action_setting"
             android:theme="@style/IconTheme"

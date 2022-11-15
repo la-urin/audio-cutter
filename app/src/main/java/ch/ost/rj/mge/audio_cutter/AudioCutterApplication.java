@@ -11,7 +11,6 @@ public class AudioCutterApplication extends Application {
         super.onCreate();
 
         Context context = getApplicationContext();
-
         AudioRepository.initialize(context);
     }
 }

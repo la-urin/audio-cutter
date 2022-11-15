@@ -40,7 +40,7 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioViewHolder> implemen
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View view = inflater.inflate(
-                R.layout.card_view_template,
+                R.layout.fragment_audio_card,
                 parent,
                 false);
 

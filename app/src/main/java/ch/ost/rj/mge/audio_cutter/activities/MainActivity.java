@@ -7,15 +7,13 @@ import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.io.File;
 
 import ch.ost.rj.mge.audio_cutter.R;
-import ch.ost.rj.mge.audio_cutter.adapter.AudioAdapter;
+import ch.ost.rj.mge.audio_cutter.fragments.AudioListFragment;
 import ch.ost.rj.mge.audio_cutter.model.Audio;
 import ch.ost.rj.mge.audio_cutter.model.AudioRepository;
 
@@ -28,16 +26,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        AudioAdapter adapter = new AudioAdapter(AudioRepository.getInstance(), this::startAudioActivity);
+        AudioListFragment audioListFragment = AudioListFragment.create();
 
-        RecyclerView recyclerView = findViewById(R.id.audio_list);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.audio_list_container, audioListFragment)
+                .commit();
 
         ExtendedFloatingActionButton fab = findViewById(R.id.fab_add);
         fab.setOnClickListener(v -> addNewAudio());
 
+        // callback for file selector
         selectAudioResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
