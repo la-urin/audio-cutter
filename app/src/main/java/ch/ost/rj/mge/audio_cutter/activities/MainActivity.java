@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent data = result.getData();
-                        if (data != null) onAudioSelected(data);
+                        Uri uri = result.getData().getData();
+                        onAudioSelected(uri);
                     }
                 });
     }
@@ -55,9 +55,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addNewAudio() {
-        Intent selectAudioIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-        if (selectAudioIntent.resolveActivity(getPackageManager()) != null) {
-            selectAudioResultLauncher.launch(selectAudioIntent);
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("audio/*");
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            selectAudioResultLauncher.launch(intent);
         }
     }
 

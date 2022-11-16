@@ -6,8 +6,8 @@
     <string name="play_audio_button">Play Audio Button</string>
     <string name="setting_audio_button">Set Audio As Buttion</string>
     <string name="share_audio_button">Share Audio Button</string>
-    <string name="empty_list_info1">Add Audio Files here!</string>
+    <string name="empty_list_info1">Fill up this space!</string>
     <string name="empty_list_background_image">Background image music note</string>
     <string name="empty_list_arrow">Arrow</string>
-    <string name="empyt_list_info2">Nothing going on here!</string>
+    <string name="empyt_list_info2">It\'s a bit empty here!</string>
 </resources>
