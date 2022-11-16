@@ -2,6 +2,7 @@ package ch.ost.rj.mge.audio_cutter.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -64,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void onAudioSelected(Intent data) {
-        File file = new File(data.getDataString());
+    private void onAudioSelected(Uri uri) {
+        File file = new File(uri.getPath());
         Audio audio = AudioRepository.getInstance().addAudio(file.getName(), file.getAbsolutePath());
         startAudioActivity(audio);
     }

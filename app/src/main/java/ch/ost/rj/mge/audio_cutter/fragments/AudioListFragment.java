@@ -1,6 +1,7 @@
 package ch.ost.rj.mge.audio_cutter.fragments;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,8 @@ public class AudioListFragment extends Fragment {
     public static AudioListFragment create() {
         return new AudioListFragment();
     }
+
+    private MediaPlayer mediaPlayer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,6 +49,20 @@ public class AudioListFragment extends Fragment {
     }
 
     private void playAudio(Audio audio) {
-        System.out.println("play audio: " + audio.path);
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer.create(getContext(), R.raw.example);
+            mediaPlayer.setOnCompletionListener(this::releaseMediaPlayer);
+            mediaPlayer.start();
+        }
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+            releaseMediaPlayer(mediaPlayer);
+        }
+    }
+
+    private void releaseMediaPlayer(MediaPlayer mediaPlayer) {
+        mediaPlayer.reset();
+        mediaPlayer.release();
+        this.mediaPlayer = null;
     }
 }
