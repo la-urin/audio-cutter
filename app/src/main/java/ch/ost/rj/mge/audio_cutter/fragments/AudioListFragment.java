@@ -33,7 +33,9 @@ public class AudioListFragment extends Fragment {
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext());
             AudioAdapter adapter = new AudioAdapter(AudioRepository.getInstance(),
                     this::startAudioActivity,
-                    this::playAudio);
+                    this::playAudio,
+                    this::settingAudio,
+                    this::shareAudio);
 
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(layoutManager);
@@ -46,6 +48,14 @@ public class AudioListFragment extends Fragment {
     private void startAudioActivity(Audio audio) {
         Intent intent = AudioActivity.createIntent(getActivity(), audio);
         startActivity(intent);
+    }
+
+    private void settingAudio(Audio audio) {
+
+    }
+
+    private void shareAudio(Audio audio) {
+
     }
 
     private void playAudio(Audio audio) {

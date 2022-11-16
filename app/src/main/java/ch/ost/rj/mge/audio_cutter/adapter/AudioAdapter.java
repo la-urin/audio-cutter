@@ -28,11 +28,19 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioViewHolder> implemen
     private final List<Audio> audios;
     private final OnAudioClickListener onClickListener;
     private final OnAudioClickListener onPlayListener;
+    private final OnAudioClickListener onSettingListener;
+    private final OnAudioClickListener onShareListener;
 
-    public AudioAdapter(AudioRepository repository, OnAudioClickListener onClickListener, OnAudioClickListener onPlayListener) {
+    public AudioAdapter(AudioRepository repository,
+                        OnAudioClickListener onClickListener,
+                        OnAudioClickListener onPlayListener,
+                        OnAudioClickListener onSettingListener,
+                        OnAudioClickListener onShareListener) {
         this.audios = new ArrayList<>(repository.getAudios());
         this.onClickListener = onClickListener;
         this.onPlayListener = onPlayListener;
+        this.onSettingListener = onSettingListener;
+        this.onShareListener = onShareListener;
 
         repository.addObserver(this);
     }
@@ -51,7 +59,9 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioViewHolder> implemen
         TextView nameView = view.findViewById(R.id.card_view_title);
         TextView pathView = view.findViewById(R.id.card_view_info);
         ImageButton playButton = view.findViewById(R.id.card_view_play);
-        return new AudioViewHolder(view, nameView, pathView, playButton);
+        ImageButton settingButton = view.findViewById(R.id.card_view_setting);
+        ImageButton shareButton = view.findViewById(R.id.card_view_share);
+        return new AudioViewHolder(view, nameView, pathView, playButton, settingButton, shareButton);
     }
 
     @Override
@@ -62,6 +72,8 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioViewHolder> implemen
 
         holder.itemView.setOnClickListener(v -> this.onClickListener.onClick(audio));
         holder.playButton.setOnClickListener(v -> this.onPlayListener.onClick(audio));
+        holder.settingButton.setOnClickListener(v -> this.onSettingListener.onClick(audio));
+        holder.shareButton.setOnClickListener(v -> this.onShareListener.onClick(audio));
     }
 
     @Override
