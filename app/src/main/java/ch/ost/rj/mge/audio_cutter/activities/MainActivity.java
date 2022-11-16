@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 import ch.ost.rj.mge.audio_cutter.R;
 import ch.ost.rj.mge.audio_cutter.fragments.AudioListFragment;
@@ -69,25 +70,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onAudioSelected(Uri uri) {
-        File file = new File(uri.getPath());
-
-        // temporary. should get deleted when everything works
-        File copy = copyExampleAudioFileFromRawToStorageAndGetPathBecauseNothingWorksFuckingAssholes();
-
-        Audio audio = AudioRepository.getInstance().addAudio(file.getName(), copy.getAbsolutePath());
+        AudioRepository repository = AudioRepository.getInstance();
+        System.out.println("uri: " + uri.toString());
+        File originalFile = new File(uri.getPath());
+        File localCopy = copyFileToLocalStorage(originalFile);
+        Audio audio = repository.addAudio(originalFile.getName(), localCopy.getAbsolutePath());
         startAudioActivity(audio);
     }
 
-    private File copyExampleAudioFileFromRawToStorageAndGetPathBecauseNothingWorksFuckingAssholes() {
-        InputStream inputStream;
-        FileOutputStream fileOutputStream;
+    private File copyFileToLocalStorage(File original) {
+        // todo: remove .mp3 ending
+        String path = String.format(Locale.GERMAN, "%d/%s.mp3", System.currentTimeMillis(), original.getName());
 
-        File destFile = new File(getApplicationContext().getExternalFilesDir("Audio"), "example.mp3");
+        File destFile = new File(getApplicationContext().getFilesDir(), path);
 
+        System.out.println("dest: " + destFile);
+        System.out.println("parent: " + destFile.getParentFile());
         if (!destFile.exists()) {
             try {
-                inputStream = getResources().openRawResource(R.raw.example);
-                fileOutputStream = new FileOutputStream(destFile);
+                if (!destFile.getParentFile().exists()){
+                    destFile.getParentFile().mkdirs();
+                }
+
+                // todo: replace with actual audio source file
+                InputStream inputStream = getResources().openRawResource(R.raw.example);
+                FileOutputStream fileOutputStream = new FileOutputStream(destFile);
 
                 byte[] buffer = new byte[1024];
                 int length;
@@ -99,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 fileOutputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                System.out.println("fail: " + e.getMessage());
             }
         }
 
