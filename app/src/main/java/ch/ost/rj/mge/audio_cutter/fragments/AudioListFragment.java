@@ -1,6 +1,8 @@
 package ch.ost.rj.mge.audio_cutter.fragments;
 
 import android.content.Intent;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -68,10 +70,26 @@ public class AudioListFragment extends Fragment {
         startActivity(Intent.createChooser(intent, "Share sound"));
     }
 
-    private void playAudio(Audio audio) {
+    private void playAudio(Audio audio){
         if (mediaPlayer == null) {
-            mediaPlayer = MediaPlayer.create(getContext(), R.raw.example);
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setLegacyStreamType(AudioManager.STREAM_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build();
+
+            mediaPlayer = new MediaPlayer();
             mediaPlayer.setOnCompletionListener(this::releaseMediaPlayer);
+            mediaPlayer.setAudioAttributes(audioAttributes);
+            try {
+                mediaPlayer.setDataSource(getContext(), Uri.parse(audio.path));
+                mediaPlayer.prepare();
+            } catch (Exception e) {
+                e.printStackTrace();
+                releaseMediaPlayer(mediaPlayer);
+                return;
+            }
+
             mediaPlayer.start();
         }
         if (mediaPlayer.isPlaying()) {

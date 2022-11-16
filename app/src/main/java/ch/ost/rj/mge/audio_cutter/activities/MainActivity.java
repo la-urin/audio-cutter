@@ -72,17 +72,17 @@ public class MainActivity extends AppCompatActivity {
         File file = new File(uri.getPath());
 
         // temporary. should get deleted when everything works
-        file = copyExampleAudioFileFromRawToStorageAndGetPathBecauseNothingWorksFuckingAssholes(file);
+        File copy = copyExampleAudioFileFromRawToStorageAndGetPathBecauseNothingWorksFuckingAssholes();
 
-        Audio audio = AudioRepository.getInstance().addAudio(file.getName(), file.getAbsolutePath());
+        Audio audio = AudioRepository.getInstance().addAudio(file.getName(), copy.getAbsolutePath());
         startAudioActivity(audio);
     }
 
-    private File copyExampleAudioFileFromRawToStorageAndGetPathBecauseNothingWorksFuckingAssholes(File file) {
+    private File copyExampleAudioFileFromRawToStorageAndGetPathBecauseNothingWorksFuckingAssholes() {
         InputStream inputStream;
         FileOutputStream fileOutputStream;
 
-        File destFile = new File(getApplicationContext().getExternalFilesDir("Audio"), file.getName());
+        File destFile = new File(getApplicationContext().getExternalFilesDir("Audio"), "example.mp3");
 
         if (!destFile.exists()) {
             try {
