@@ -10,4 +10,5 @@
     <string name="empty_list_background_image">Background image music note</string>
     <string name="empty_list_arrow">Arrow</string>
     <string name="empyt_list_info2">It\'s a bit empty here!</string>
+    <string name="ringtone_set">"Ringtone set to "</string>
 </resources>

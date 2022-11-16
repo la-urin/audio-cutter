@@ -1,16 +1,25 @@
 package ch.ost.rj.mge.audio_cutter.fragments;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,8 +67,25 @@ public class AudioListFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void settingAudio(Audio audio) {
-
+    public void settingAudio(Audio audio){
+        boolean permission;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            permission = Settings.System.canWrite(getContext());
+        } else {
+            permission = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_SETTINGS) == PackageManager.PERMISSION_GRANTED;
+        }
+        if (permission) {
+            RingtoneManager.setActualDefaultRingtoneUri(getContext(), RingtoneManager.TYPE_RINGTONE, Uri.parse(audio.path));
+            Toast.makeText(getContext(), getString(R.string.ringtone_set) + audio.name, Toast.LENGTH_SHORT).show();
+        }  else {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                intent.setData(Uri.parse("package:" + getContext().getPackageName()));
+                startActivityForResult(intent, 1);
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_SETTINGS}, 1);
+            }
+        }
     }
 
     private void shareAudio(Audio audio) {
@@ -70,7 +96,7 @@ public class AudioListFragment extends Fragment {
         startActivity(Intent.createChooser(intent, "Share sound"));
     }
 
-    private void playAudio(Audio audio){
+    private void playAudio(Audio audio) {
         if (mediaPlayer == null) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setLegacyStreamType(AudioManager.STREAM_MUSIC)
