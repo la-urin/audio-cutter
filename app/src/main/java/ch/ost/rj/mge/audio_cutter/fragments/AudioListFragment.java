@@ -61,41 +61,11 @@ public class AudioListFragment extends Fragment {
     }
 
     private void shareAudio(Audio audio) {
-        // use example file in raw folder. delete this shit
-        Uri uri = getUriFromRawExampleAudioFileBecauseNothingIsWorking();
-//        Uri uri = Uri.parse(audio.path);
-
+        Uri uri = Uri.parse(audio.path);
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         intent.setType("audio/*");
         startActivity(Intent.createChooser(intent, "Share sound"));
-    }
-
-    private Uri getUriFromRawExampleAudioFileBecauseNothingIsWorking() {
-        InputStream inputStream;
-        FileOutputStream fileOutputStream;
-
-        String filename = "example.mp3";
-        File destFile = new File(getContext().getExternalFilesDir("Audio"), filename);
-
-        if (!destFile.exists()) {
-            try {
-                inputStream = getResources().openRawResource(R.raw.example);
-                fileOutputStream = new FileOutputStream(destFile);
-
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = inputStream.read(buffer)) > 0) {
-                    fileOutputStream.write(buffer, 0, length);
-                }
-
-                inputStream.close();
-                fileOutputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return Uri.parse(destFile.getAbsolutePath());
     }
 
     private void playAudio(Audio audio) {

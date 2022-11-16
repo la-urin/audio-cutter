@@ -13,6 +13,9 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import ch.ost.rj.mge.audio_cutter.R;
 import ch.ost.rj.mge.audio_cutter.fragments.AudioListFragment;
@@ -67,7 +70,38 @@ public class MainActivity extends AppCompatActivity {
 
     private void onAudioSelected(Uri uri) {
         File file = new File(uri.getPath());
+
+        // temporary. should get deleted when everything works
+        file = copyExampleAudioFileFromRawToStorageAndGetPathBecauseNothingWorksFuckingAssholes(file);
+
         Audio audio = AudioRepository.getInstance().addAudio(file.getName(), file.getAbsolutePath());
         startAudioActivity(audio);
+    }
+
+    private File copyExampleAudioFileFromRawToStorageAndGetPathBecauseNothingWorksFuckingAssholes(File file) {
+        InputStream inputStream;
+        FileOutputStream fileOutputStream;
+
+        File destFile = new File(getApplicationContext().getExternalFilesDir("Audio"), file.getName());
+
+        if (!destFile.exists()) {
+            try {
+                inputStream = getResources().openRawResource(R.raw.example);
+                fileOutputStream = new FileOutputStream(destFile);
+
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = inputStream.read(buffer)) > 0) {
+                    fileOutputStream.write(buffer, 0, length);
+                }
+
+                inputStream.close();
+                fileOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return destFile;
     }
 }
