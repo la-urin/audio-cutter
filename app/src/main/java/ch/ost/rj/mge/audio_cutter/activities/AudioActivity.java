@@ -277,7 +277,6 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.action_save).setVisible(true);
         menu.findItem(R.id.action_reset).setVisible(true);
-        menu.findItem(R.id.action_about).setVisible(true);
         return true;
     }
 
@@ -291,9 +290,6 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
                 resetPositions();
                 mOffsetGoal = 0;
                 updateDisplay();
-                return true;
-            case R.id.action_about:
-                onAbout(this);
                 return true;
             default:
                 return false;
@@ -502,27 +498,6 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
                 updateDisplay();
             }
         }, 100);
-    }
-
-    //
-    // Static About dialog method, also called from RingdroidSelectActivity
-    //
-
-    public static void onAbout(final Activity activity) {
-        String versionName = "";
-        try {
-            PackageManager packageManager = activity.getPackageManager();
-            String packageName = activity.getPackageName();
-            versionName = packageManager.getPackageInfo(packageName, 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            versionName = "unknown";
-        }
-        new AlertDialog.Builder(activity)
-                .setTitle(R.string.about_title)
-                .setMessage(activity.getString(R.string.about_text, versionName))
-                .setPositiveButton(R.string.alert_ok_button, null)
-                .setCancelable(false)
-                .show();
     }
 
     //
