@@ -1445,6 +1445,7 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
         }
 
         createSnip();
+        finish();
     }
 
     private final OnClickListener mPlayListener = new OnClickListener() {
