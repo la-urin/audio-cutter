@@ -68,7 +68,7 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioViewHolder> implemen
     public void onBindViewHolder(@NonNull AudioViewHolder holder, int position) {
         Audio audio = this.audios.get(position);
         holder.nameView.setText(audio.name);
-        holder.pathView.setText(audio.path);
+        holder.pathView.setText(audio.originalFilePath);
 
         holder.itemView.setOnClickListener(v -> this.onClickListener.onClick(audio));
         holder.playButton.setOnClickListener(v -> this.onPlayListener.onClick(audio));

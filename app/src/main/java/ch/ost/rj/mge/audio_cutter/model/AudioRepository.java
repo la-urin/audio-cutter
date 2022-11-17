@@ -35,10 +35,11 @@ public class AudioRepository extends Observable {
         notifyObservers(audio);
     }
 
-    public Audio addAudio(String name, String path) {
+    public Audio addAudio(String name, String originalFilePath, String snipFilePath) {
         Audio audio = new Audio();
         audio.name = name;
-        audio.path = path;
+        audio.originalFilePath = originalFilePath;
+        audio.snipFilePath = snipFilePath;
 
         addAudio(audio);
 

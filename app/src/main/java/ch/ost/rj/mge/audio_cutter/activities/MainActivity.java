@@ -1,13 +1,17 @@
 package ch.ost.rj.mge.audio_cutter.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -26,6 +30,7 @@ import ch.ost.rj.mge.audio_cutter.model.AudioRepository;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final int WRITE_STORAGE_REQUEST_CODE = 2;
     private ActivityResultLauncher<Intent> selectAudioResultLauncher;
 
     @Override
@@ -52,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
                         onAudioSelected(uri);
                     }
                 });
+
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, WRITE_STORAGE_REQUEST_CODE);
+        }
     }
 
     private void startAudioActivity(Audio audio) {
@@ -74,7 +85,8 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("uri: " + uri.toString());
         File originalFile = new File(uri.getPath());
         File localCopy = copyFileToLocalStorage(originalFile);
-        Audio audio = repository.addAudio(originalFile.getName(), localCopy.getAbsolutePath());
+        File snipFile = new File(localCopy.getParentFile(), "snip/");
+        Audio audio = repository.addAudio(originalFile.getName(), localCopy.getAbsolutePath(), snipFile.getAbsolutePath());
         startAudioActivity(audio);
     }
 
@@ -88,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("parent: " + destFile.getParentFile());
         if (!destFile.exists()) {
             try {
-                if (!destFile.getParentFile().exists()){
+                if (!destFile.getParentFile().exists()) {
                     destFile.getParentFile().mkdirs();
                 }
 

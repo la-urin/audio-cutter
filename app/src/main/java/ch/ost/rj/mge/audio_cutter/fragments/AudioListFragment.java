@@ -30,6 +30,8 @@ import ch.ost.rj.mge.audio_cutter.model.AudioRepository;
 
 public class AudioListFragment extends Fragment {
 
+    public static final int WRITE_SETTINGS_REQUEST_CODE = 1;
+
     public static AudioListFragment create() {
         return new AudioListFragment();
     }
@@ -69,7 +71,7 @@ public class AudioListFragment extends Fragment {
             permission = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_SETTINGS) == PackageManager.PERMISSION_GRANTED;
         }
         if (permission) {
-            RingtoneManager.setActualDefaultRingtoneUri(getContext(), RingtoneManager.TYPE_RINGTONE, Uri.parse(audio.path));
+            RingtoneManager.setActualDefaultRingtoneUri(getContext(), RingtoneManager.TYPE_RINGTONE, Uri.parse(audio.originalFilePath));
             Toast.makeText(getContext(), getString(R.string.ringtone_set) + audio.name, Toast.LENGTH_SHORT).show();
         } else {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -77,13 +79,13 @@ public class AudioListFragment extends Fragment {
                 intent.setData(Uri.parse("package:" + getContext().getPackageName()));
                 startActivityForResult(intent, 1);
             } else {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_SETTINGS}, 1);
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_SETTINGS}, WRITE_SETTINGS_REQUEST_CODE);
             }
         }
     }
 
     private void shareAudio(Audio audio) {
-        Uri uri = Uri.parse(audio.path);
+        Uri uri = Uri.parse(audio.originalFilePath);
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         intent.setType("audio/*");
@@ -102,7 +104,7 @@ public class AudioListFragment extends Fragment {
             mediaPlayer.setOnCompletionListener(this::releaseMediaPlayer);
             mediaPlayer.setAudioAttributes(audioAttributes);
             try {
-                mediaPlayer.setDataSource(getContext(), Uri.parse(audio.path));
+                mediaPlayer.setDataSource(getContext(), Uri.parse(audio.originalFilePath));
                 mediaPlayer.prepare();
             } catch (Exception e) {
                 e.printStackTrace();

@@ -3,6 +3,7 @@ package ch.ost.rj.mge.audio_cutter.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -26,6 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.RandomAccessFile;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 
@@ -124,7 +126,9 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
     // Public methods and protected overrides
     //
 
-    /** Called when the activity is first created. */
+    /**
+     * Called when the activity is first created.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,7 +160,7 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
         // they create.
         mWasGetContentIntent = intent.getBooleanExtra("was_get_content_intent", false);
 
-        mFilename = audio.path.replaceFirst("file://", "").replaceAll("%20", " ");
+        mFilename = audio.originalFilePath.replaceFirst("file://", "").replaceAll("%20", " ");
         mSoundFile = null;
         mKeyDown = false;
 
@@ -167,7 +171,7 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
         mHandler.postDelayed(mTimerRunnable, 100);
 
 //        if (!mFilename.equals("record")) {
-            loadFromFile();
+        loadFromFile();
 //        } else {
 //            recordAudio();
 //        }
@@ -182,7 +186,9 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
         }
     }
 
-    /** Called when the activity is finally destroyed. */
+    /**
+     * Called when the activity is finally destroyed.
+     */
     @Override
     protected void onDestroy() {
         Log.v("Ringdroid", "EditActivity OnDestroy");
@@ -195,11 +201,11 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
         mLoadSoundFileThread = null;
         mRecordAudioThread = null;
         mSaveSoundFileThread = null;
-        if(mProgressDialog != null) {
+        if (mProgressDialog != null) {
             mProgressDialog.dismiss();
             mProgressDialog = null;
         }
-        if(mAlertDialog != null) {
+        if (mAlertDialog != null) {
             mAlertDialog.dismiss();
             mAlertDialog = null;
         }
@@ -215,7 +221,9 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
         super.onDestroy();
     }
 
-    /** Called with an Activity we started with an Intent returns. */
+    /**
+     * Called with an Activity we started with an Intent returns.
+     */
     @Override
     protected void onActivityResult(int requestCode,
                                     int resultCode,
@@ -330,7 +338,7 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
     }
 
     public void waveformTouchMove(float x) {
-        mOffset = trap((int)(mTouchInitialOffset + (mTouchStart - x)));
+        mOffset = trap((int) (mTouchInitialOffset + (mTouchStart - x)));
         updateDisplay();
     }
 
@@ -342,7 +350,7 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
         if (elapsedMsec < 300) {
             if (mIsPlaying) {
                 int seekMsec = mWaveformView.pixelsToMillisecs(
-                        (int)(mTouchStart + mOffset));
+                        (int) (mTouchStart + mOffset));
                 if (seekMsec >= mPlayStartMsec &&
                         seekMsec < mPlayEndMsec) {
                     mPlayer.seekTo(seekMsec);
@@ -350,7 +358,7 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
                     handlePause();
                 }
             } else {
-                onPlay((int)(mTouchStart + mOffset));
+                onPlay((int) (mTouchStart + mOffset));
             }
         }
     }
@@ -358,7 +366,7 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
     public void waveformFling(float vx) {
         mTouchDragging = false;
         mOffsetGoal = mOffset;
-        mFlingVelocity = (int)(-vx);
+        mFlingVelocity = (int) (-vx);
         updateDisplay();
     }
 
@@ -400,10 +408,10 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
         float delta = x - mTouchStart;
 
         if (marker == mStartMarker) {
-            mStartPos = trap((int)(mTouchInitialStartPos + delta));
-            mEndPos = trap((int)(mTouchInitialEndPos + delta));
+            mStartPos = trap((int) (mTouchInitialStartPos + delta));
+            mEndPos = trap((int) (mTouchInitialEndPos + delta));
         } else {
-            mEndPos = trap((int)(mTouchInitialEndPos + delta));
+            mEndPos = trap((int) (mTouchInitialEndPos + delta));
             if (mEndPos < mStartPos)
                 mEndPos = mStartPos;
         }
@@ -533,10 +541,10 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         mDensity = metrics.density;
 
-        mMarkerLeftInset = (int)(46 * mDensity);
-        mMarkerRightInset = (int)(48 * mDensity);
-        mMarkerTopOffset = (int)(10 * mDensity);
-        mMarkerBottomOffset = (int)(10 * mDensity);
+        mMarkerLeftInset = (int) (46 * mDensity);
+        mMarkerRightInset = (int) (48 * mDensity);
+        mMarkerTopOffset = (int) (10 * mDensity);
+        mMarkerBottomOffset = (int) (10 * mDensity);
 
         mStartText = findViewById(R.id.start_text);
         mStartText.addTextChangedListener(mTextWatcher);
@@ -680,7 +688,7 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
                 if (mLoadingKeepGoing) {
                     Runnable runnable = () -> finishOpeningSoundFile();
                     mHandler.post(runnable);
-                } else if (mFinishActivity){
+                } else if (mFinishActivity) {
                     finish();
                 }
             }
@@ -1029,8 +1037,8 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
     }
 
     private String formatDecimal(double x) {
-        int xWhole = (int)x;
-        int xFrac = (int)(100 * (x - xWhole) + 0.5);
+        int xWhole = (int) x;
+        int xFrac = (int) (100 * (x - xWhole) + 0.5);
 
         if (xFrac >= 100) {
             xWhole++; //Round up
@@ -1121,206 +1129,172 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
         showFinalAlert(e, getResources().getText(messageResourceId));
     }
 
-//    private String makeRingtoneFilename(CharSequence title, String extension) {
-//        String subdir;
-//        String externalRootDir = Environment.getExternalStorageDirectory().getPath();
-//        if (!externalRootDir.endsWith("/")) {
-//            externalRootDir += "/";
-//        }
-////        switch(mNewFileKind) {
-////            default:
-////            case FileSaveDialog.FILE_KIND_MUSIC:
-////                 TODO(nfaralli): can directly use Environment.getExternalStoragePublicDirectory(
-////                 Environment.DIRECTORY_MUSIC).getPath() instead
-//                subdir = "media/audio/music/";
-////                break;
-////            case FileSaveDialog.FILE_KIND_ALARM:
-////                subdir = "media/audio/alarms/";
-////                break;
-////            case FileSaveDialog.FILE_KIND_NOTIFICATION:
-////                subdir = "media/audio/notifications/";
-////                break;
-////            case FileSaveDialog.FILE_KIND_RINGTONE:
-////                subdir = "media/audio/ringtones/";
-////                break;
-////        }
-//        String parentdir = externalRootDir + subdir;
-//
-//        // Create the parent directory
-//        File parentDirFile = new File(parentdir);
-//        parentDirFile.mkdirs();
-//
-//        // If we can't write to that special path, try just writing
-//        // directly to the sdcard
-//        if (!parentDirFile.isDirectory()) {
-//            parentdir = externalRootDir;
-//        }
-//
-//        // Turn the title into a filename
-//        String filename = "";
-//        for (int i = 0; i < title.length(); i++) {
-//            if (Character.isLetterOrDigit(title.charAt(i))) {
-//                filename += title.charAt(i);
-//            }
-//        }
-//
-//        // Try to make the filename unique
-//        String path = null;
-//        for (int i = 0; i < 100; i++) {
-//            String testPath;
-//            if (i > 0)
-//                testPath = parentdir + filename + i + extension;
-//            else
-//                testPath = parentdir + filename + extension;
-//
-//            try {
-//                RandomAccessFile f = new RandomAccessFile(new File(testPath), "r");
-//                f.close();
-//            } catch (Exception e) {
-//                // Good, the file didn't exist
-//                path = testPath;
-//                break;
-//            }
-//        }
-//
-//        return path;
-//    }
+    private String makeSnipFileName(Audio audio, String extension) {
+        File dir = new File(audio.snipFilePath);
+        dir.mkdirs();
 
-//    private void saveRingtone(final CharSequence title) {
-//        double startTime = mWaveformView.pixelsToSeconds(mStartPos);
-//        double endTime = mWaveformView.pixelsToSeconds(mEndPos);
-//        final int startFrame = mWaveformView.secondsToFrames(startTime);
-//        final int endFrame = mWaveformView.secondsToFrames(endTime);
-//        final int duration = (int)(endTime - startTime + 0.5);
-//
-//        // Create an indeterminate progress dialog
-//        mProgressDialog = new ProgressDialog(this);
-//        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//        mProgressDialog.setTitle(R.string.progress_dialog_saving);
-//        mProgressDialog.setIndeterminate(true);
-//        mProgressDialog.setCancelable(false);
-//        mProgressDialog.show();
-//
-//        // Save the sound file in a background thread
-//        mSaveSoundFileThread = new Thread() {
-//            public void run() {
-//                // Try AAC first.
-//                String outPath = makeRingtoneFilename(title, ".m4a");
-//                if (outPath == null) {
-//                    Runnable runnable = new Runnable() {
-//                        public void run() {
-//                            showFinalAlert(new Exception(), R.string.no_unique_filename);
-//                        }
-//                    };
-//                    mHandler.post(runnable);
-//                    return;
-//                }
-//                File outFile = new File(outPath);
-//                Boolean fallbackToWAV = false;
-//                try {
-//                    // Write the new file
-//                    mSoundFile.WriteFile(outFile,  startFrame, endFrame - startFrame);
-//                } catch (Exception e) {
-//                    // log the error and try to create a .wav file instead
-//                    if (outFile.exists()) {
-//                        outFile.delete();
-//                    }
-//                    StringWriter writer = new StringWriter();
-//                    e.printStackTrace(new PrintWriter(writer));
-//                    Log.e("Ringdroid", "Error: Failed to create " + outPath);
-//                    Log.e("Ringdroid", writer.toString());
-//                    fallbackToWAV = true;
-//                }
-//
-//                // Try to create a .wav file if creating a .m4a file failed.
-//                if (fallbackToWAV) {
-//                    outPath = makeRingtoneFilename(title, ".wav");
-//                    if (outPath == null) {
-//                        Runnable runnable = new Runnable() {
-//                            public void run() {
-//                                showFinalAlert(new Exception(), R.string.no_unique_filename);
-//                            }
-//                        };
-//                        mHandler.post(runnable);
-//                        return;
-//                    }
-//                    outFile = new File(outPath);
-//                    try {
-//                        // create the .wav file
-//                        mSoundFile.WriteWAVFile(outFile, startFrame, endFrame - startFrame);
-//                    } catch (Exception e) {
-//                        // Creating the .wav file also failed. Stop the progress dialog, show an
-//                        // error message and exit.
-//                        mProgressDialog.dismiss();
-//                        if (outFile.exists()) {
-//                            outFile.delete();
-//                        }
-//                        mInfoContent = e.toString();
-//                        runOnUiThread(new Runnable() {
-//                            public void run() {
-//                                mInfo.setText(mInfoContent);
-//                            }
-//                        });
-//
-//                        CharSequence errorMessage;
-//                        if (e.getMessage() != null
-//                                && e.getMessage().equals("No space left on device")) {
-//                            errorMessage = getResources().getText(R.string.no_space_error);
-//                            e = null;
-//                        } else {
-//                            errorMessage = getResources().getText(R.string.write_error);
-//                        }
-//                        final CharSequence finalErrorMessage = errorMessage;
-//                        final Exception finalException = e;
-//                        Runnable runnable = new Runnable() {
-//                            public void run() {
-//                                showFinalAlert(finalException, finalErrorMessage);
-//                            }
-//                        };
-//                        mHandler.post(runnable);
-//                        return;
-//                    }
-//                }
-//
-//                // Try to load the new file to make sure it worked
-//                try {
-//                    final SoundFile.ProgressListener listener =
-//                            new SoundFile.ProgressListener() {
-//                                public boolean reportProgress(double frac) {
-//                                    // Do nothing - we're not going to try to
-//                                    // estimate when reloading a saved sound
-//                                    // since it's usually fast, but hard to
-//                                    // estimate anyway.
-//                                    return true;  // Keep going
-//                                }
-//                            };
-//                    SoundFile.create(outPath, listener);
-//                } catch (final Exception e) {
-//                    mProgressDialog.dismiss();
-//                    e.printStackTrace();
-//                    mInfoContent = e.toString();
-//                    runOnUiThread(() -> mInfo.setText(mInfoContent));
-//
-//                    Runnable runnable = () -> showFinalAlert(e, getResources().getText(R.string.write_error));
-//                    mHandler.post(runnable);
-//                    return;
-//                }
-//
-//                mProgressDialog.dismiss();
-//
-//                final String finalOutPath = outPath;
-//                Runnable runnable = () -> afterSavingRingtone(title,
+        // Turn the title into a filename
+        String filename = "";
+        char[] nameCharArray = audio.name.toCharArray();
+        for (int i = 0; i < nameCharArray.length; i++) {
+            if (Character.isLetterOrDigit(nameCharArray[i])) {
+                filename += nameCharArray[i];
+            }
+        }
+        filename += "_snip";
+
+        // Try to make the filename unique
+        String dirPath = dir.getAbsolutePath() + "/";
+        String path = null;
+        for (int i = 0; i < 100; i++) {
+            String testPath;
+            if (i > 0)
+                testPath = dirPath + filename + i + extension;
+            else
+                testPath = dirPath + filename + extension;
+
+            try {
+                RandomAccessFile f = new RandomAccessFile(new File(testPath), "r");
+                f.close();
+            } catch (Exception e) {
+                // Good, the file didn't exist
+                path = testPath;
+                break;
+            }
+        }
+
+        return path;
+    }
+
+    private void createSnip() {
+        double startTime = mWaveformView.pixelsToSeconds(mStartPos);
+        double endTime = mWaveformView.pixelsToSeconds(mEndPos);
+        final int startFrame = mWaveformView.secondsToFrames(startTime);
+        final int endFrame = mWaveformView.secondsToFrames(endTime);
+        final int duration = (int)(endTime - startTime + 0.5);
+
+        // Create an indeterminate progress dialog
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setTitle(R.string.progress_dialog_saving);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+
+        // Save the sound file in a background thread
+        mSaveSoundFileThread = new Thread() {
+            public void run() {
+                // Try AAC first.
+                String outPath = makeSnipFileName(audio, ".m4a");
+
+                if (outPath == null) {
+                    Runnable runnable = new Runnable() {
+                        public void run() {
+                            showFinalAlert(new Exception(), R.string.no_unique_filename);
+                        }
+                    };
+                    mHandler.post(runnable);
+                    return;
+                }
+                File outFile = new File(outPath);
+                Boolean fallbackToWAV = false;
+                try {
+                    if (outFile.exists()) {
+                        outFile.delete();
+                    }
+                    // Write the new file
+                    mSoundFile.WriteFile(outFile,  startFrame, endFrame - startFrame);
+                } catch (Exception e) {
+                    // log the error and try to create a .wav file instead
+                    if (outFile.exists()) {
+                        outFile.delete();
+                    }
+                    StringWriter writer = new StringWriter();
+                    e.printStackTrace(new PrintWriter(writer));
+                    Log.e("Ringdroid", "Error: Failed to create " + outPath);
+                    Log.e("Ringdroid", writer.toString());
+                    fallbackToWAV = true;
+                }
+
+                // Try to create a .wav file if creating a .m4a file failed.
+                if (fallbackToWAV) {
+                    outPath = makeSnipFileName(audio, ".wav");
+                    if (outPath == null) {
+                        Runnable runnable = new Runnable() {
+                            public void run() {
+                                showFinalAlert(new Exception(), R.string.no_unique_filename);
+                            }
+                        };
+                        mHandler.post(runnable);
+                        return;
+                    }
+                    outFile = new File(outPath);
+                    try {
+                        // create the .wav file
+                        mSoundFile.WriteWAVFile(outFile, startFrame, endFrame - startFrame);
+                    } catch (Exception e) {
+                        // Creating the .wav file also failed. Stop the progress dialog, show an
+                        // error message and exit.
+                        mProgressDialog.dismiss();
+                        if (outFile.exists()) {
+                            outFile.delete();
+                        }
+                        mInfoContent = e.toString();
+                        runOnUiThread(() -> mInfo.setText(mInfoContent));
+
+                        CharSequence errorMessage;
+                        if (e.getMessage() != null
+                                && e.getMessage().equals("No space left on device")) {
+                            errorMessage = getResources().getText(R.string.no_space_error);
+                            e = null;
+                        } else {
+                            errorMessage = getResources().getText(R.string.write_error);
+                        }
+                        final CharSequence finalErrorMessage = errorMessage;
+                        final Exception finalException = e;
+                        Runnable runnable = () -> showFinalAlert(finalException, finalErrorMessage);
+                        mHandler.post(runnable);
+                        return;
+                    }
+                }
+
+                // Try to load the new file to make sure it worked
+                try {
+                    final SoundFile.ProgressListener listener =
+                            frac -> {
+                                // Do nothing - we're not going to try to
+                                // estimate when reloading a saved sound
+                                // since it's usually fast, but hard to
+                                // estimate anyway.
+                                return true;  // Keep going
+                            };
+                    SoundFile.create(outPath, listener);
+                } catch (final Exception e) {
+                    mProgressDialog.dismiss();
+                    e.printStackTrace();
+                    mInfoContent = e.toString();
+                    runOnUiThread(() -> mInfo.setText(mInfoContent));
+
+                    Runnable runnable = () -> showFinalAlert(e, getResources().getText(R.string.write_error));
+                    mHandler.post(runnable);
+                    return;
+                }
+
+                mProgressDialog.dismiss();
+
+                final String finalOutPath = outPath;
+//                Runnable runnable = () -> afterCreatingSnip(audio.snipFilePath,
 //                        finalOutPath,
 //                        duration);
 //                mHandler.post(runnable);
-//            }
-//        };
-//        mSaveSoundFileThread.start();
-//    }
+            }
+        };
+        mSaveSoundFileThread.start();
+    }
 
-//    private void afterSavingRingtone(CharSequence title,
-//                                     String outPath,
-//                                     int duration) {
+//    private void afterCreatingSnip(CharSequence title,
+//                                   String outPath,
+//                                   int duration) {
 //        File outFile = new File(outPath);
 //        long fileSize = outFile.length();
 //        if (fileSize <= 512) {
@@ -1470,17 +1444,7 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
             handlePause();
         }
 
-//        final Handler handler = new Handler() {
-//            public void handleMessage(Message response) {
-//                CharSequence newTitle = (CharSequence)response.obj;
-//                mNewFileKind = response.arg1;
-//                saveRingtone(newTitle);
-//            }
-//        };
-//        Message message = Message.obtain(handler);
-//        FileSaveDialog dlog = new FileSaveDialog(
-//                this, getResources(), mTitle, message);
-//        dlog.show();
+        createSnip();
     }
 
     private final OnClickListener mPlayListener = new OnClickListener() {

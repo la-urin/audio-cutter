@@ -15,5 +15,8 @@ public final class Audio implements Serializable {
     public String name;
 
     @ColumnInfo
-    public String path;
+    public String originalFilePath;
+
+    @ColumnInfo
+    public String snipFilePath;
 }
