@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,4 +6,169 @@
     android:layout_height="match_parent"
     tools:context=".activities.AudioActivity">
 
+    <RelativeLayout
+        android:id="@+id/player_waves"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/player_controls">
+
+        <ch.ost.rj.mge.audio_cutter.views.WaveformView
+            android:id="@+id/waveform"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent" />
+
+        <ch.ost.rj.mge.audio_cutter.views.MarkerView
+            android:id="@+id/startmarker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/start_marker"
+            android:nextFocusDown="@+id/endmarker"
+            android:src="@drawable/marker_left" />
+
+        <ch.ost.rj.mge.audio_cutter.views.MarkerView
+            android:id="@+id/endmarker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/end_marker"
+            android:nextFocusUp="@+id/startmarker"
+            android:nextFocusDown="@+id/info"
+            android:src="@drawable/marker_right" />
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/player_controls"
+        style="@style/ToolbarBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/player_waves">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5"/>
+
+        <TextView
+            android:id="@+id/player_info"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:nextFocusUp="@+id/endmarker"
+            android:nextFocusDown="@+id/player_play"
+            android:textSize="@dimen/player_small_text"
+            app:layout_constraintEnd_toEndOf="@+id/player_controls"
+            app:layout_constraintStart_toStartOf="@+id/player_controls"
+            app:layout_constraintTop_toTopOf="@+id/player_controls" />
+
+        <ImageButton
+            android:id="@+id/player_rew"
+            style="@style/IconTheme"
+            android:layout_width="64dip"
+            android:layout_height="52dip"
+            android:contentDescription="@string/rewind"
+            android:src="@android:drawable/ic_media_previous"
+            app:layout_constraintEnd_toStartOf="@+id/player_play"
+            app:layout_constraintTop_toBottomOf="@+id/player_info" />
+
+        <ImageButton
+            android:id="@+id/player_play"
+            style="@style/IconTheme"
+            android:layout_width="71dip"
+            android:layout_height="52dip"
+            android:contentDescription="@string/play"
+            android:src="@android:drawable/ic_media_play"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/player_info" />
+
+        <ImageButton
+            android:id="@+id/player_ffwd"
+            style="@style/IconTheme"
+            android:layout_width="64dip"
+            android:layout_height="52dip"
+            android:contentDescription="@string/ffwd"
+            android:src="@android:drawable/ic_media_next"
+            app:layout_constraintStart_toEndOf="@+id/player_play"
+            app:layout_constraintTop_toBottomOf="@+id/player_info" />
+
+
+        <LinearLayout
+            android:id="@+id/divider_top"
+            style="@style/HorizontalDividerTop"
+            android:layout_width="0dp"
+            android:layout_height="1px"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/player_play" />
+
+        <LinearLayout
+            android:id="@+id/divider_bottom"
+            style="@style/HorizontalDividerBottom"
+            android:layout_width="0dp"
+            android:layout_height="1px"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider_top" />
+
+        <TextView
+            android:id="@+id/label_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:labelFor="@+id/start_text"
+            android:text="@string/start_label"
+            android:textSize="@dimen/player_text_label_size"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@+id/start_text"
+            app:layout_constraintEnd_toStartOf="@id/start_text"/>
+
+        <EditText
+            android:id="@+id/start_text"
+            android:layout_width="70dip"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:inputType="number|numberDecimal"
+            android:textSize="@dimen/player_text_input_size"
+            app:layout_constraintEnd_toEndOf="@id/guideline"
+            app:layout_constraintHorizontal_bias="0.9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider_bottom" />
+
+        <TextView
+            android:id="@+id/label_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:labelFor="@+id/end_text"
+            android:text="@string/end_label"
+            android:textSize="@dimen/player_text_label_size"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@+id/end_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/guideline"
+            app:layout_constraintHorizontal_bias="0.1"/>
+
+        <EditText
+            android:id="@+id/end_text"
+            android:layout_width="70dip"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:inputType="number|numberDecimal"
+            android:textSize="@dimen/player_text_input_size"
+            app:layout_constraintStart_toEndOf="@id/label_end"
+            app:layout_constraintTop_toBottomOf="@id/divider_bottom" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

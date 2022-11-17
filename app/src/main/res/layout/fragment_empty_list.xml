@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/amatica_sc"
         android:rotation="6"
-        android:text="@string/empyt_list_info2"
+        android:text="@string/empty_list_info2"
         android:textSize="@dimen/card_title_size"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

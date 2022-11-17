@@ -19,4 +19,12 @@
         <item name="android:tint">@color/black</item>
         <item name="android:backgroundTint">@color/white</item>
     </style>
+    <style name="ToolbarBackground">
+    </style>
+    <style name="HorizontalDividerTop">
+        <item name="android:background">#666677</item>
+    </style>
+    <style name="HorizontalDividerBottom">
+        <item name="android:background">#000022</item>
+    </style>
 </resources>

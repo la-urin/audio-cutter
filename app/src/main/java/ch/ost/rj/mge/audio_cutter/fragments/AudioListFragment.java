@@ -19,14 +19,8 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 import ch.ost.rj.mge.audio_cutter.R;
 import ch.ost.rj.mge.audio_cutter.activities.AudioActivity;
@@ -67,7 +61,7 @@ public class AudioListFragment extends Fragment {
         startActivity(intent);
     }
 
-    public void settingAudio(Audio audio){
+    public void settingAudio(Audio audio) {
         boolean permission;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             permission = Settings.System.canWrite(getContext());
@@ -77,7 +71,7 @@ public class AudioListFragment extends Fragment {
         if (permission) {
             RingtoneManager.setActualDefaultRingtoneUri(getContext(), RingtoneManager.TYPE_RINGTONE, Uri.parse(audio.path));
             Toast.makeText(getContext(), getString(R.string.ringtone_set) + audio.name, Toast.LENGTH_SHORT).show();
-        }  else {
+        } else {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
                 intent.setData(Uri.parse("package:" + getContext().getPackageName()));
