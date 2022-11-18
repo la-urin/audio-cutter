@@ -5,9 +5,21 @@ Ostschweizer Fachhochschule
 Laurin Zubler
 
 ## Beschreibung
-Mit der App Audio Cutter kann eine Audiodatei ausgewählt, zugeschnitten und als Klingelton gesezt werden.
-
-Sollte das Ändern eines Klingeltons aus einer App in Android nicht möglich sein, wird auf die entsprechende Systemeinstellung verlinkt und der Benutzer muss dies selbst erledigen.
+Audio Cutter kann Audio Dateien zuschneiden, teilen und als Kligelton setzen.
 
 ## Punkte
 Erforderlich: 7
+
+| **#** | **Beschreibung**                               | **Punkte** |
+|-------|------------------------------------------------|:----------:|
+| 1     | Screen - Liste Audio Dateien                   |     2      |
+| 2     | Screen - Leere Audio Dateien Liste             |     2      |
+| 3     | Screen - Audio Datei zuschneiden               |     3      |
+| 4     | Audio Datei auswählen - Anbindung File Browser |     2      |
+| 5     | Audio Datei bearbeiten / speichern             |     2      |
+| 6     | Audio Datei teilen                             |     2      |
+| 7     | Audio Datei setzen als Klingelton              |     2      |
+| 8     | Lokalisierung - Sprachen Englisch, Deutsch     |     1      |
+| 9     | Unterschiedliche Styles - Dark, Light          |     1      |
+| 10    | Persistenz - Room DB                           |     3      |
+| 11    | Jetpack-Komponenten                            |     1      |
