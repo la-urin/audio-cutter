@@ -33,12 +33,8 @@
     <string name="artist_name">Artist</string>
     <string name="too_small_error">File zu klein</string>
     <string name="add_audio">Audio</string>
-    <string name="add_audio">A</string>
     <string name="play">Abspielen</string>
-    <string name="play">A</string>
     <string name="end_label">Ende:</string>
-    <string name="end_label">EN</string>
-    <string name="play_error">Unfähig diese media File abzuspielen</string>
-    <string name="play_error">U</string>
+    <string name="play_error">Unfähig diese Media File abzuspielen</string>
     <string name="no_space_error">Nicht genug Speicherplatz</string>
 </resources>
