@@ -19,7 +19,8 @@ Erforderlich: 7
 | 5     | Audio Datei bearbeiten / speichern             |     2      |
 | 6     | Audio Datei teilen                             |     2      |
 | 7     | Audio Datei setzen als Klingelton              |     2      |
-| 8     | Lokalisierung - Sprachen Englisch, Deutsch     |     1      |
+| 8     | Lokalisierung - Englisch, Deutsch              |     1      |
 | 9     | Unterschiedliche Styles - Dark, Light          |     1      |
-| 10    | Persistenz - Room DB                           |     3      |
-| 11    | Jetpack-Komponenten                            |     1      |
+| 10    | Unterschiedliche Layouts - Portrait, Landscape |     1      |
+| 11    | Persistenz - Room DB                           |     3      |
+| 12    | Jetpack-Komponenten                            |     1      |
