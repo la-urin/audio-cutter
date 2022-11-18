@@ -1,45 +1,45 @@
 package ch.ost.rj.mge.audio_cutter.activities;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Environment;
-import android.view.Menu;
-import android.view.MenuItem;
-
-import android.app.Activity;
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.io.File;
-import java.io.RandomAccessFile;
-import java.io.StringWriter;
-import java.io.PrintWriter;
-
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.RandomAccessFile;
+import java.io.StringWriter;
 
 import ch.ost.rj.mge.audio_cutter.R;
 import ch.ost.rj.mge.audio_cutter.model.Audio;
-import ch.ost.rj.mge.audio_cutter.views.MarkerView;
 import ch.ost.rj.mge.audio_cutter.ringdroid.SamplePlayer;
 import ch.ost.rj.mge.audio_cutter.ringdroid.SongMetadataReader;
 import ch.ost.rj.mge.audio_cutter.ringdroid.SoundFile;
+import ch.ost.rj.mge.audio_cutter.views.MarkerView;
 import ch.ost.rj.mge.audio_cutter.views.WaveformView;
 
 public class AudioActivity extends AppCompatActivity implements MarkerView.MarkerListener, WaveformView.WaveformListener {
@@ -116,6 +116,7 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
 
     // Result codes
     private static final int REQUEST_CODE_CHOOSE_CONTACT = 1;
+    public static final int WRITE_STORAGE_REQUEST_CODE = 2;
 
     /**
      * This is a special intent action that means "edit a sound file".
@@ -1146,7 +1147,7 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
         double endTime = mWaveformView.pixelsToSeconds(mEndPos);
         final int startFrame = mWaveformView.secondsToFrames(startTime);
         final int endFrame = mWaveformView.secondsToFrames(endTime);
-        final int duration = (int)(endTime - startTime + 0.5);
+        final int duration = (int) (endTime - startTime + 0.5);
 
         // Create an indeterminate progress dialog
         mProgressDialog = new ProgressDialog(this);
@@ -1178,7 +1179,7 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
                         outFile.delete();
                     }
                     // Write the new file
-                    mSoundFile.WriteFile(outFile,  startFrame, endFrame - startFrame);
+                    mSoundFile.WriteFile(outFile, startFrame, endFrame - startFrame);
                 } catch (Exception e) {
                     // log the error and try to create a .wav file instead
                     if (outFile.exists()) {
@@ -1419,8 +1420,13 @@ public class AudioActivity extends AppCompatActivity implements MarkerView.Marke
             handlePause();
         }
 
-        createSnip();
-        finish();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, WRITE_STORAGE_REQUEST_CODE);
+        } else {
+            createSnip();
+            finish();
+        }
     }
 
     private final OnClickListener mPlayListener = new OnClickListener() {

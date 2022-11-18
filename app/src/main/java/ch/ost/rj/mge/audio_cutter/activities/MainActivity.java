@@ -1,17 +1,13 @@
 package ch.ost.rj.mge.audio_cutter.activities;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
@@ -30,7 +26,6 @@ import ch.ost.rj.mge.audio_cutter.model.AudioRepository;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final int WRITE_STORAGE_REQUEST_CODE = 2;
     private ActivityResultLauncher<Intent> selectAudioResultLauncher;
 
     @Override
@@ -57,12 +52,6 @@ public class MainActivity extends AppCompatActivity {
                         onAudioSelected(uri);
                     }
                 });
-
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, WRITE_STORAGE_REQUEST_CODE);
-        }
     }
 
     private void startAudioActivity(Audio audio) {
@@ -91,8 +80,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private File copyFileToLocalStorage(File original) {
-        // todo: remove .mp3 ending
-        String path = String.format(Locale.GERMAN, "%d/%s.mp3", System.currentTimeMillis(), original.getName());
+        String path = String.format(Locale.GERMAN, "%d/%s", System.currentTimeMillis(), original.getName());
 
         File destFile = new File(getApplicationContext().getFilesDir(), path);
 
