@@ -11,7 +11,7 @@ Audio Cutter kann Audio Dateien zuschneiden, teilen und als Kligelton setzen.
 <p align="center">
   <img src="/screenshots/AudioCutter_Screenshot3.png" width="350" title="Screenshot 1">
   <img src="/screenshots/AudioCutter_Screenshot1.png" width="350" title="Screenshot 2">
-  <img src="/screenshots/AudioCutter_Screenshot2.png" width="350" title="Screenshot 3">
+  <img src="/screenshots/AudioCutter_Screenshot2.png" width="380" title="Screenshot 3">
 </p>
 
 ## Punkte
