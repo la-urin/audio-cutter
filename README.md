@@ -7,6 +7,11 @@ Laurin Zubler
 ## Beschreibung
 Audio Cutter kann Audio Dateien zuschneiden, teilen und als Kligelton setzen.
 
+## Screenshots
+![Screenshot 3](/screenshots/AudioCutter_Screenshot3.png)
+![Screenshot 1](/screenshots/AudioCutter_Screenshot1.png)
+![Screenshot 2](/screenshots/AudioCutter_Screenshot2.png)
+
 ## Punkte
 Erforderlich: 7
 
